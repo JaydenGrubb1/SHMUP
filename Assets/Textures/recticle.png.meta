@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 222ea8b065753e347a4473dddf9bbf14
+guid: 2a29f620c371dc94ca3d31831e48441c
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -51,7 +51,7 @@ TextureImporter:
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
-  spriteTessellationDetail: 0
+  spriteTessellationDetail: -1
   textureType: 8
   textureShape: 1
   singleChannelComponent: 0
@@ -90,16 +90,8 @@ TextureImporter:
   spriteSheet:
     serializedVersion: 2
     sprites: []
-    outline:
-    - - {x: -72, y: 0}
-      - {x: -128, y: 128}
-      - {x: 128, y: 0}
-      - {x: -128, y: -128}
-    physicsShape:
-    - - {x: -72, y: 0}
-      - {x: -128, y: 128}
-      - {x: 128, y: 0}
-      - {x: -128, y: -128}
+    outline: []
+    physicsShape: []
     bones: []
     spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
@@ -107,9 +99,7 @@ TextureImporter:
     indices: 
     edges: []
     weights: []
-    secondaryTextures:
-    - texture: {fileID: 2800000, guid: 19eb9a9daa00bc54c806a251876313f9, type: 3}
-      name: _Emission
+    secondaryTextures: []
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

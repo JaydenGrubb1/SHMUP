@@ -86,6 +86,8 @@ namespace SHMUP
 			prevMove = velocity;
 			sprite.position += velocity * Time.deltaTime * movementSpeed;
 
+			//transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0, 0, 5) * Time.deltaTime * 10);
+
 			// Update recticle position
 			if (input.currentControlScheme == "Controller")
 			{

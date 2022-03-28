@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6182379743803174574}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: BulletSpawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55,8 +55,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1747814863264615703}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.37, y: 0.37, z: 1}
+  m_LocalPosition: {x: 1, y: 0, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children: []
   m_Father: {fileID: 7898816848669297064}
   m_RootOrder: 0
@@ -101,7 +101,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2a29f620c371dc94ca3d31831e48441c, type: 3}
   m_Color: {r: 0, g: 1, b: 0.015245676, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -122,7 +122,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5757835336165553202}
   - component: {fileID: 5607052800074907836}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -185,7 +185,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 222ea8b065753e347a4473dddf9bbf14, type: 3}
-  m_Color: {r: 1, g: 0.52006483, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.49349722, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -340,9 +340,9 @@ MonoBehaviour:
   recticle: {fileID: 6715989252706893795}
   bulletSpawn: {fileID: 6182379743803174574}
   bulletsPerSecond: 8
-  movementSpeed: 7
+  movementSpeed: 5
   speedBoost: 4
-  targetSpeed: 15
+  targetSpeed: 12
   rotationSmoothing: 10
   movementSmoothing: 2.5
   targetSmoothing: 10
