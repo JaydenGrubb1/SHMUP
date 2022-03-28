@@ -22,6 +22,8 @@ namespace SHMUP
 		[SerializeField]
 		private float movementSpeed = 10;
 		[SerializeField]
+		private float speedBoost = 2;
+		[SerializeField]
 		private float targetSpeed = 15;
 		[SerializeField]
 		private float rotationSmoothing = 10;
@@ -34,6 +36,7 @@ namespace SHMUP
 		private Vector3 moveInput = Vector3.zero;
 		private Vector3 targetInput = Vector3.zero;
 		private bool firing = false;
+		private float speedMulti = 1;
 
 		// Calculation variables
 		private Vector3 prevMove = Vector3.zero;
@@ -57,6 +60,11 @@ namespace SHMUP
 		{
 			firing = context.action.triggered;
 		}
+
+		public void OnBoost(InputAction.CallbackContext context)
+		{
+			speedMulti = context.action.triggered ? speedBoost : 1;
+		}
 		#endregion
 
 		public void Start()
@@ -72,7 +80,7 @@ namespace SHMUP
 		public void Update()
 		{
 			// Update player position
-			Vector3 velocity = Vector3.Lerp(prevMove, moveInput, Time.deltaTime * movementSmoothing);
+			Vector3 velocity = Vector3.Lerp(prevMove, moveInput * speedMulti, Time.deltaTime * movementSmoothing);
 			prevMove = velocity;
 			sprite.position += velocity * Time.deltaTime * movementSpeed;
 

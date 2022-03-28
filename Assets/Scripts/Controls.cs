@@ -43,6 +43,14 @@ namespace SHMUP
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Boost"",
+                    ""type"": ""Button"",
+                    ""id"": ""1bae9611-4dde-497a-8496-93e872ea9952"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -155,6 +163,28 @@ namespace SHMUP
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c759aaca-0f6a-4084-97f7-3dea10ba68b1"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Boost"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ed5eede4-5f0e-4b92-b360-ef24f1893eab"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Controller"",
+                    ""action"": ""Boost"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -194,6 +224,7 @@ namespace SHMUP
             m_Player_Movement = m_Player.FindAction("Movement", throwIfNotFound: true);
             m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
             m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
+            m_Player_Boost = m_Player.FindAction("Boost", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -246,6 +277,7 @@ namespace SHMUP
         private readonly InputAction m_Player_Movement;
         private readonly InputAction m_Player_Fire;
         private readonly InputAction m_Player_Look;
+        private readonly InputAction m_Player_Boost;
         public struct PlayerActions
         {
             private @Controls m_Wrapper;
@@ -253,6 +285,7 @@ namespace SHMUP
             public InputAction @Movement => m_Wrapper.m_Player_Movement;
             public InputAction @Fire => m_Wrapper.m_Player_Fire;
             public InputAction @Look => m_Wrapper.m_Player_Look;
+            public InputAction @Boost => m_Wrapper.m_Player_Boost;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -271,6 +304,9 @@ namespace SHMUP
                     @Look.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLook;
                     @Look.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLook;
                     @Look.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLook;
+                    @Boost.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBoost;
+                    @Boost.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBoost;
+                    @Boost.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnBoost;
                 }
                 m_Wrapper.m_PlayerActionsCallbackInterface = instance;
                 if (instance != null)
@@ -284,6 +320,9 @@ namespace SHMUP
                     @Look.started += instance.OnLook;
                     @Look.performed += instance.OnLook;
                     @Look.canceled += instance.OnLook;
+                    @Boost.started += instance.OnBoost;
+                    @Boost.performed += instance.OnBoost;
+                    @Boost.canceled += instance.OnBoost;
                 }
             }
         }
@@ -311,6 +350,7 @@ namespace SHMUP
             void OnMovement(InputAction.CallbackContext context);
             void OnFire(InputAction.CallbackContext context);
             void OnLook(InputAction.CallbackContext context);
+            void OnBoost(InputAction.CallbackContext context);
         }
     }
 }

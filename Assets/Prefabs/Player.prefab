@@ -385,6 +385,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 43c32691-aac3-48fe-a5e5-8e0217ccc4ca
     m_ActionName: Player/Look[/XInputControllerWindows/rightStick,/Mouse/delta]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7898816848669297066}
+        m_TargetAssemblyTypeName: SHMUP.PlayerController, Assembly-CSharp
+        m_MethodName: OnBoost
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 1bae9611-4dde-497a-8496-93e872ea9952
+    m_ActionName: Player/Boost[/Keyboard/shift,/XInputControllerWindows/leftShoulder,/XInputControllerWindows/leftShoulder]
   m_NeverAutoSwitchControlSchemes: 1
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -406,10 +422,9 @@ MonoBehaviour:
   sprite: {fileID: 5757835336165553202}
   recticle: {fileID: 6715989252706893795}
   bulletSpawn: {fileID: 6182379743803174574}
-  movementSpeed: 10
+  movementSpeed: 7
+  speedBoost: 4
   targetSpeed: 15
   rotationSmoothing: 10
   movementSmoothing: 2.5
   targetSmoothing: 10
-  test1: {fileID: 8832642337563938557, guid: c96262b80ee50f64f827f69320cb5651, type: 3}
-  test2: {fileID: 8130530750597289908, guid: 4e05fbedb7df18843abd2f94807c696e, type: 3}
