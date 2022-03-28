@@ -411,3 +411,5 @@ MonoBehaviour:
   rotationSmoothing: 10
   movementSmoothing: 2.5
   targetSmoothing: 10
+  test1: {fileID: 8832642337563938557, guid: c96262b80ee50f64f827f69320cb5651, type: 3}
+  test2: {fileID: 8130530750597289908, guid: 4e05fbedb7df18843abd2f94807c696e, type: 3}

@@ -38,6 +38,8 @@ namespace SHMUP
 		// Calculation variables
 		private Vector3 prevMove = Vector3.zero;
 		private Vector3 prevTarget = Vector3.zero;
+		private Vector3 screenLower;
+		private Vector3 screenUpper;
 		#endregion
 
 		#region Input Callbacks
@@ -61,6 +63,8 @@ namespace SHMUP
 		{
 			Cursor.lockState = CursorLockMode.Confined;
 			Cursor.visible = false;
+			screenLower = Camera.main.ScreenToWorldPoint(Vector2.zero).SetZ(0);
+			screenUpper = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height)).SetZ(0);
 		}
 
 		bool wasFiring = false;
@@ -75,9 +79,13 @@ namespace SHMUP
 			// Update recticle position
 			if (input.currentControlScheme == "Controller")
 			{
+				targetInput = targetInput.Clamp(screenLower - recticle.position, screenUpper - recticle.position);
+
 				Vector3 targetVel = Vector3.Lerp(prevTarget, targetInput, Time.deltaTime * targetSmoothing);
 				prevTarget = targetVel;
-				recticle.position += targetVel * Time.deltaTime * targetSpeed;
+				Vector3 newPos = recticle.position;
+				newPos += (targetVel * Time.deltaTime * targetSpeed);
+				recticle.position = newPos.Clamp(screenLower, screenUpper);
 			}
 			else
 			{
