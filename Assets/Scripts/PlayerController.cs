@@ -20,6 +20,8 @@ namespace SHMUP
 
 		[Header("Variables")]
 		[SerializeField]
+		private float bulletsPerSecond = 8f;
+		[SerializeField]
 		private float movementSpeed = 10;
 		[SerializeField]
 		private float speedBoost = 2;
@@ -117,10 +119,16 @@ namespace SHMUP
 				go.transform.position = bulletSpawn.position;
 				go.GetComponent<Rigidbody2D>().AddForce(diff.normalized * 1000);
 				wasFiring = true;
+				Invoke("ResetFireState", 1f / bulletsPerSecond);
 			}
 
 			if (!firing)
 				wasFiring = false;
+		}
+
+		private void ResetFireState()
+		{
+			wasFiring = false;
 		}
 	}
 }
