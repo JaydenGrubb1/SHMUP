@@ -16,7 +16,7 @@ namespace SHMUP
 		[SerializeField]
 		private Transform recticle;
 		[SerializeField]
-		public GameObject line;
+		private Transform bulletSpawn;
 
 		[Header("Variables")]
 		[SerializeField]
@@ -63,6 +63,8 @@ namespace SHMUP
 			Cursor.visible = false;
 		}
 
+		bool wasFiring = false;
+
 		public void Update()
 		{
 			// Update player position
@@ -92,7 +94,17 @@ namespace SHMUP
 			sprite.rotation = Quaternion.Lerp(sprite.rotation, quat, Time.deltaTime * rotationSmoothing);
 
 			// Temp
-			line.SetActive(firing);
+			if (firing && !wasFiring)
+			{
+				GameObject go = ObjectPool.Get("player-bullet");
+				go.SetActive(true);
+				go.transform.position = bulletSpawn.position;
+				go.GetComponent<Rigidbody2D>().AddForce(diff.normalized * 1000);
+				wasFiring = true;
+			}
+
+			if (!firing)
+				wasFiring = false;
 		}
 	}
 }
