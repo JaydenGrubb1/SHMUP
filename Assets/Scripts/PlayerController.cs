@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using SHMUP.Util;
+using DG.Tweening;
 
 namespace SHMUP
 {
@@ -19,7 +20,7 @@ namespace SHMUP
 		[SerializeField]
 		private Transform bulletSpawn;
 
-		[Header("Variables")]
+		[Header("Control Variables")]
 		[SerializeField]
 		private float bulletsPerSecond = 8f;
 		[SerializeField]
@@ -35,9 +36,25 @@ namespace SHMUP
 		[SerializeField]
 		private float targetSmoothing = 2.5f;
 		[SerializeField]
+		private float boostDuration = 5;
+		[SerializeField]
+		private float boostRecharge = 1.5f;
+
+		[Header("Animation Variables")]
+		[SerializeField]
 		private Vector2 trailEmmisionLimits = new Vector2(0.3f, 30);
 		[SerializeField]
+		private float trailEmmisionBoostMulti = 2f;
+		[SerializeField]
 		private float maxRelativeSpeed = 0.2f;
+		[SerializeField]
+		private Vector2 fireScaleLimits = new Vector2(0.38f, 0.4f);
+		[SerializeField]
+		private float fireScaleDuration = 0.06f;
+		[SerializeField]
+		private Vector2 boostScaleLimits = new Vector2(0.32f, 0.4f);
+		[SerializeField]
+		private float boostScaleDuration = 0.2f;
 
 		[Header("Component References")]
 		public SpriteRenderer mainSprite;
@@ -48,15 +65,22 @@ namespace SHMUP
 		private Vector3 moveInput = Vector3.zero;
 		private Vector3 targetInput = Vector3.zero;
 		private bool firing = false;
-		private float speedMulti = 1;
+		private bool boosting = false;
+		//private float speedMulti = 1;
 
 		// Calculation variables
 		private Vector3 prevMove = Vector3.zero;
 		private Vector3 prevTarget = Vector3.zero;
-		private Vector3 prevVelocity = Vector3.zero;
 		private Vector3 screenLower;
 		private Vector3 screenUpper;
 		private bool wasFiring = false;
+		private bool isBoosting = false;
+		private bool wasBoosting = false;
+
+		// Properties
+		public float BoostRemaining { get; private set; }
+		public float BoostDuration { get { return boostDuration; } }
+		public bool BoostDrained { get; private set; } = false;
 		#endregion
 
 		#region Input Callbacks
@@ -77,22 +101,50 @@ namespace SHMUP
 
 		public void OnBoost(InputAction.CallbackContext context)
 		{
-			speedMulti = context.action.triggered ? speedBoost : 1;
+			//speedMulti = context.action.triggered ? speedBoost : 1;
+			//context.action.
+			boosting = context.action.triggered;
 		}
 		#endregion
 
 		public void Start()
 		{
-			Cursor.lockState = CursorLockMode.Confined;
-			Cursor.visible = false;
-			screenLower = Camera.main.ScreenToWorldPoint(Vector2.zero).SetZ(0);
-			screenUpper = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height)).SetZ(0);
+			//Cursor.lockState = CursorLockMode.Confined;
+			//Cursor.visible = false;
+			//screenLower = Camera.main.ScreenToWorldPoint(Vector2.zero).SetZ(0);
+			//screenUpper = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height)).SetZ(0);
+
+			BoostRemaining = boostDuration;
 		}
 
 		public void Update()
 		{
+			// Calculate boost status
+			BoostRemaining += Time.deltaTime * (boosting && !BoostDrained ? -1 : boostRecharge);
+			BoostRemaining = Mathf.Clamp(BoostRemaining, 0, boostDuration);
+
+			if (BoostRemaining == 0)
+				BoostDrained = true;
+			if (BoostRemaining == boostDuration)
+				BoostDrained = false;
+			isBoosting = !BoostDrained && BoostRemaining > 0 && boosting;
+
+			// Vibrate controller
+			// NEEDS FIXING, VIBRATE CORRECT CONTROLLER
+			if (isBoosting)
+				Gamepad.current.SetMotorSpeeds(0.25f, 0.75f);
+			else
+				Gamepad.current.SetMotorSpeeds(0, 0);
+
+			// Scale player when boost start
+			if (isBoosting && !wasBoosting)
+				sprite.DOScaleY(boostScaleLimits.x, boostScaleDuration);
+			if (wasBoosting && !isBoosting)
+				sprite.DOScaleY(boostScaleLimits.y, boostScaleDuration);
+			wasBoosting = isBoosting;
+
 			// Update player position
-			Vector3 velocity = Vector3.Lerp(prevMove, moveInput * speedMulti, Time.deltaTime * movementSmoothing);
+			Vector3 velocity = Vector3.Lerp(prevMove, moveInput * (isBoosting ? speedBoost : 1), Time.deltaTime * movementSmoothing);
 			prevMove = velocity;
 			Vector3 absVelocity = velocity * Time.deltaTime * movementSpeed;
 			sprite.position += absVelocity;
@@ -100,7 +152,9 @@ namespace SHMUP
 			// Update trail emmision rate
 			// based on current velocity
 			ParticleSystem.EmissionModule emm = trailSystem.emission;
-			emm.rateOverTime = Mathf.Lerp(trailEmmisionLimits.x, trailEmmisionLimits.y, Mathf.InverseLerp(0, maxRelativeSpeed, absVelocity.magnitude));
+			float relativeSpeed = Mathf.InverseLerp(0, maxRelativeSpeed, absVelocity.magnitude);
+			float emmisionRate = Mathf.Lerp(trailEmmisionLimits.x, trailEmmisionLimits.y, relativeSpeed);
+			emm.rateOverTime = emmisionRate * (isBoosting ? trailEmmisionBoostMulti : 1);
 
 			// Update recticle position
 			if (input.currentControlScheme == "Controller")
@@ -127,19 +181,22 @@ namespace SHMUP
 			Quaternion quat = Quaternion.Euler(new Vector3(0, 0, angle));
 			sprite.rotation = Quaternion.Lerp(sprite.rotation, quat, Time.deltaTime * rotationSmoothing);
 
-			// Temp
+			// Fire bullets
 			if (firing && !wasFiring)
 			{
-				GameObject go = ObjectPool.Get("player-bullet");
-				go.SetActive(true);
-				go.transform.position = bulletSpawn.position;
-				go.GetComponent<Rigidbody2D>().AddForce(diff.normalized * 1000);
+				GameObject bullet = ObjectPool.Get("player-bullet");
+				bullet.SetActive(true);
+				bullet.transform.position = bulletSpawn.position;
+				bullet.GetComponent<Rigidbody2D>().AddForce(diff.normalized * 1000);
 				wasFiring = true;
 				Invoke("ResetFireState", 1f / bulletsPerSecond);
-			}
 
-			if (!firing)
-				wasFiring = false;
+				// Animate recoil
+				sprite.DOScaleX(fireScaleLimits.x, fireScaleDuration).OnComplete(() =>
+				{
+					sprite.DOScaleX(fireScaleLimits.y, fireScaleDuration);
+				});
+			}
 		}
 
 		private void ResetFireState()

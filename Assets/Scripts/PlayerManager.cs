@@ -44,10 +44,7 @@ namespace SHMUP
 					ParticleSystem.MainModule main = pc.trailSystem.main;
 					main.startColor = localColor;
 
-					//foreach (SpriteRenderer rend in players[localIndex].GetComponentsInChildren<SpriteRenderer>())
-					//{
-					//	rend.color = colors[localIndex % colors.Length];
-					//}
+					uiSections[localIndex].GetComponent<PlayerUI>().player = pc;
 					
 					foreach(Image img in uiSections[localIndex].GetComponentsInChildren<Image>())
 					{
@@ -58,6 +55,7 @@ namespace SHMUP
 					float width = 1f / players.Count;
 					rect.anchorMin = new Vector2(localIndex * width, 0);
 					rect.anchorMax = new Vector2((localIndex + 1) * width, 1);
+
 				}
 			}
 		}

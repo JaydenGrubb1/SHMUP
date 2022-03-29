@@ -5180,8 +5180,8 @@ MonoBehaviour:
   targetSmoothing: 10
   trailEmmisionLimits: {x: 0.3, y: 30}
   maxRelativeSpeed: 0.2
-  spriteSquishLimits: {x: 0.4, y: 0.22}
-  maxAcceleration: 0.06
+  fireScaleLimits: {x: 0.36, y: 0.4}
+  fireScaleDuration: 0.06
   mainSprite: {fileID: 5607052800074907836}
   recticleSprite: {fileID: 7592918620979375816}
   trailSystem: {fileID: 1950701095602523022}
