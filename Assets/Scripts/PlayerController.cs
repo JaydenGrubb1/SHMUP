@@ -60,6 +60,8 @@ namespace SHMUP
 		private float invincibleBlinkDuration = 0.2f;
 		[SerializeField]
 		private int invincibleBlinkLoops = 20;
+		[SerializeField]
+		private float deathTimeStop = 5;
 
 		[Header("Camera Shake")]
 		[SerializeField]
@@ -85,6 +87,7 @@ namespace SHMUP
 		public SpriteRenderer mainSprite;
 		public SpriteRenderer recticleSprite;
 		public ParticleSystem trailSystem;
+		public ParticleSystem deathSystem;
 
 		[HideInInspector]
 		public PlayerUI playerUI;
@@ -255,6 +258,7 @@ namespace SHMUP
 						ShakeCamera(deathShake);
 						Gamepad.current.SetMotorSpeeds(deathRumble.x, deathRumble.y);
 						Invoke("ResetRumble", deathRumbleTime);
+						deathSystem.Play();
 						mainSprite.DOColor(Color.white, invincibleBlinkDuration);
 					}
 				}
