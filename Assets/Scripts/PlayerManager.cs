@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using SHMUP.Util;
 
 namespace SHMUP
 {
@@ -37,7 +39,12 @@ namespace SHMUP
 					foreach (SpriteRenderer rend in players[localIndex].GetComponentsInChildren<SpriteRenderer>())
 					{
 						rend.color = colors[localIndex % colors.Length];
-					}					
+					}
+					
+					foreach(Image img in uiSections[localIndex].GetComponentsInChildren<Image>())
+					{
+						img.color = img.color.SetRGB(colors[localIndex % colors.Length]);
+					}
 
 					RectTransform rect = uiSections[localIndex].GetComponent<RectTransform>();
 					float width = 1f / players.Count;

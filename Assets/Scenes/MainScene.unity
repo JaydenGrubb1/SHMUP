@@ -662,7 +662,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_NotificationBehavior: 2
-  m_MaxPlayerCount: 2
+  m_MaxPlayerCount: 4
   m_AllowJoining: 1
   m_JoinBehavior: 0
   m_PlayerJoinedEvent:
@@ -732,10 +732,10 @@ MonoBehaviour:
   uiSectionPrefab: {fileID: 1172416938951003627, guid: ed5f79f2b50a61f4c9a03870dbe4c3a6, type: 3}
   uiParent: {fileID: 497396715}
   colors:
-  - {r: 1, g: 0, b: 0, a: 1}
-  - {r: 0, g: 1, b: 0, a: 1}
-  - {r: 0, g: 0, b: 1, a: 1}
-  - {r: 1, g: 1, b: 0, a: 1}
+  - {r: 0, g: 0.48034477, b: 1, a: 1}
+  - {r: 1, g: 0.15566039, b: 0.17021805, a: 1}
+  - {r: 0.3443396, g: 1, b: 0.3443396, a: 1}
+  - {r: 0.972549, g: 0.9098039, b: 0.1764706, a: 1}
 --- !u!1 &758529327
 GameObject:
   m_ObjectHideFlags: 0
@@ -1200,8 +1200,32 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 497396715}
     m_Modifications:
+    - target: {fileID: 94528910, guid: ed5f79f2b50a61f4c9a03870dbe4c3a6, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 94528910, guid: ed5f79f2b50a61f4c9a03870dbe4c3a6, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 94528910, guid: ed5f79f2b50a61f4c9a03870dbe4c3a6, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 905907880, guid: ed5f79f2b50a61f4c9a03870dbe4c3a6, type: 3}
       propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1485153684, guid: ed5f79f2b50a61f4c9a03870dbe4c3a6, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1485153684, guid: ed5f79f2b50a61f4c9a03870dbe4c3a6, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1485153684, guid: ed5f79f2b50a61f4c9a03870dbe4c3a6, type: 3}
+      propertyPath: m_Color.r
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1172416938951003626, guid: ed5f79f2b50a61f4c9a03870dbe4c3a6, type: 3}
