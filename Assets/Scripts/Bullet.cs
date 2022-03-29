@@ -10,5 +10,10 @@ namespace SHMUP
 		{
 			gameObject.SetActive(false);
 		}
+
+		public void OnTriggerEnter2D(Collider2D collision)
+		{
+			gameObject.SetActive(false);
+		}
 	}
 }

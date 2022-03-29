@@ -23,7 +23,7 @@ namespace SHMUP
 
 		public void OnPlayerJoined(PlayerInput input)
 		{
-			Vector2 size = (GameManager.screenUpper - GameManager.screenLower);
+			Vector2 size = (GameManager.ScreenUpper - GameManager.ScreenLower);
 			input.transform.SetParent(transform, false);
 			players.Add(input);
 			uiSections.Add(Instantiate(uiSectionPrefab, uiParent));
@@ -34,7 +34,7 @@ namespace SHMUP
 				{
 					int localIndex = i / 2;
 					Vector3 pos = new Vector3(size.x * (i / (float)(players.Count * 2)), size.y / 2, 0);
-					players[localIndex].transform.position = pos + GameManager.screenLower;
+					players[localIndex].transform.position = pos + GameManager.ScreenLower;
 
 					PlayerController pc = players[localIndex].GetComponent<PlayerController>();
 					Color localColor = colors[localIndex % colors.Length];

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using SHMUP.Util;
 using DG.Tweening;
+using System;
 
 namespace SHMUP
 {
@@ -56,6 +57,14 @@ namespace SHMUP
 		[SerializeField]
 		private float boostScaleDuration = 0.2f;
 
+		[Header("Camera Shake")]
+		[SerializeField]
+		private CameraShakeParams firingShake;
+		[SerializeField]
+		private CameraShakeParams damageShake;
+		[SerializeField]
+		private CameraShakeParams deathShake;
+
 		[Header("Component References")]
 		public SpriteRenderer mainSprite;
 		public SpriteRenderer recticleSprite;
@@ -71,8 +80,6 @@ namespace SHMUP
 		// Calculation variables
 		private Vector3 prevMove = Vector3.zero;
 		private Vector3 prevTarget = Vector3.zero;
-		private Vector3 screenLower;
-		private Vector3 screenUpper;
 		private bool wasFiring = false;
 		private bool isBoosting = false;
 		private bool wasBoosting = false;
@@ -81,6 +88,10 @@ namespace SHMUP
 		public float BoostRemaining { get; private set; }
 		public float BoostDuration { get { return boostDuration; } }
 		public bool BoostDrained { get; private set; } = false;
+
+
+		public AudioSource audioSource;
+		public AudioClip audioClip;
 		#endregion
 
 		#region Input Callbacks
@@ -159,18 +170,18 @@ namespace SHMUP
 			// Update recticle position
 			if (input.currentControlScheme == "Controller")
 			{
-				targetInput = targetInput.Clamp(screenLower - recticle.position, screenUpper - recticle.position);
+				targetInput = targetInput.Clamp(GameManager.ScreenLower - recticle.position, GameManager.ScreenUpper - recticle.position);
 
 				Vector3 targetVel = Vector3.Lerp(prevTarget, targetInput, Time.deltaTime * targetSmoothing);
 				prevTarget = targetVel;
 				Vector3 newPos = recticle.position;
 				newPos += (targetVel * Time.deltaTime * targetSpeed);
-				recticle.position = newPos.Clamp(screenLower, screenUpper);
+				recticle.position = newPos.Clamp(GameManager.ScreenLower, GameManager.ScreenUpper);
 			}
 			else
 			{
 				Vector2 mousePos = Mouse.current.position.ReadValue();
-				Vector3 targetPos = Camera.main.ScreenToWorldPoint(mousePos);
+				Vector3 targetPos = GameManager.MainCamera.ScreenToWorldPoint(mousePos);
 				targetPos.z = 0;
 				recticle.position = Vector3.Lerp(recticle.position, targetPos, Time.deltaTime * targetSmoothing);
 			}
@@ -189,7 +200,10 @@ namespace SHMUP
 				bullet.transform.position = bulletSpawn.position;
 				bullet.GetComponent<Rigidbody2D>().AddForce(diff.normalized * 1000);
 				wasFiring = true;
+				audioSource.PlayOneShot(audioClip);
 				Invoke("ResetFireState", 1f / bulletsPerSecond);
+
+
 
 				// Animate recoil
 				sprite.DOScaleX(fireScaleLimits.x, fireScaleDuration).OnComplete(() =>
@@ -199,9 +213,30 @@ namespace SHMUP
 			}
 		}
 
+		public void OnTriggerEnter2D(Collider2D collision)
+		{
+
+		}
+
 		private void ResetFireState()
 		{
 			wasFiring = false;
+		}
+
+		private void ShakeCamera(CameraShakeParams shake)
+		{
+			GameManager.MainCamera.transform.DOShakePosition(shake.duration, shake.strength, shake.vibrato, shake.randomness, shake.snapping, shake.fadeOut);
+		}
+
+		[Serializable]
+		struct CameraShakeParams
+		{
+			public float duration;
+			public float strength;
+			public int vibrato;
+			public float randomness;
+			public bool snapping;
+			public bool fadeOut;
 		}
 	}
 }
