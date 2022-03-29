@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour
+namespace SHMUP
 {
-	public void OnBecameInvisible()
+	public class Bullet : MonoBehaviour
 	{
-		gameObject.SetActive(false);
+		public void OnBecameInvisible()
+		{
+			gameObject.SetActive(false);
+		}
 	}
 }
