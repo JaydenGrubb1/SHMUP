@@ -187,6 +187,44 @@ namespace SHMUP
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Game"",
+            ""id"": ""90707a6f-b0fe-4510-9ec8-2330673f98f1"",
+            ""actions"": [
+                {
+                    ""name"": ""Exit"",
+                    ""type"": ""Button"",
+                    ""id"": ""bd498700-2e2b-4637-8004-7aa7d5caa738"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""47c107ef-637d-4754-95c9-eb469d74dd31"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Exit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4189d677-e7e1-4b6d-b9ad-5189be7f8654"",
+                    ""path"": ""<Gamepad>/select"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Controller"",
+                    ""action"": ""Exit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -225,6 +263,9 @@ namespace SHMUP
             m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
             m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
             m_Player_Boost = m_Player.FindAction("Boost", throwIfNotFound: true);
+            // Game
+            m_Game = asset.FindActionMap("Game", throwIfNotFound: true);
+            m_Game_Exit = m_Game.FindAction("Exit", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -327,6 +368,39 @@ namespace SHMUP
             }
         }
         public PlayerActions @Player => new PlayerActions(this);
+
+        // Game
+        private readonly InputActionMap m_Game;
+        private IGameActions m_GameActionsCallbackInterface;
+        private readonly InputAction m_Game_Exit;
+        public struct GameActions
+        {
+            private @Controls m_Wrapper;
+            public GameActions(@Controls wrapper) { m_Wrapper = wrapper; }
+            public InputAction @Exit => m_Wrapper.m_Game_Exit;
+            public InputActionMap Get() { return m_Wrapper.m_Game; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(GameActions set) { return set.Get(); }
+            public void SetCallbacks(IGameActions instance)
+            {
+                if (m_Wrapper.m_GameActionsCallbackInterface != null)
+                {
+                    @Exit.started -= m_Wrapper.m_GameActionsCallbackInterface.OnExit;
+                    @Exit.performed -= m_Wrapper.m_GameActionsCallbackInterface.OnExit;
+                    @Exit.canceled -= m_Wrapper.m_GameActionsCallbackInterface.OnExit;
+                }
+                m_Wrapper.m_GameActionsCallbackInterface = instance;
+                if (instance != null)
+                {
+                    @Exit.started += instance.OnExit;
+                    @Exit.performed += instance.OnExit;
+                    @Exit.canceled += instance.OnExit;
+                }
+            }
+        }
+        public GameActions @Game => new GameActions(this);
         private int m_KeyboardSchemeIndex = -1;
         public InputControlScheme KeyboardScheme
         {
@@ -351,6 +425,10 @@ namespace SHMUP
             void OnFire(InputAction.CallbackContext context);
             void OnLook(InputAction.CallbackContext context);
             void OnBoost(InputAction.CallbackContext context);
+        }
+        public interface IGameActions
+        {
+            void OnExit(InputAction.CallbackContext context);
         }
     }
 }

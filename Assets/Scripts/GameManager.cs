@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using SHMUP.Util;
 
 namespace SHMUP
@@ -29,12 +30,25 @@ namespace SHMUP
             }
         }
 
-        public void Start()
+		public void Start()
         {
             Cursor.lockState = CursorLockMode.Confined;
             Cursor.visible = false;
             ScreenLower = MainCamera.ScreenToWorldPoint(Vector2.zero).SetZ(0);
             ScreenUpper = MainCamera.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height)).SetZ(0);
+        }
+
+  //      public void Exit()
+		//{
+  //          Quit();
+		//}
+
+        public static void Quit()
+        {
+            Application.Quit();
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#endif
         }
     }
 }

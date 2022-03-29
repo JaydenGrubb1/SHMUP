@@ -4998,7 +4998,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: f33a1d8c8deb2f047ba0766e20a30016, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5268,6 +5268,8 @@ MonoBehaviour:
   fireScaleDuration: 0.06
   boostScaleLimits: {x: 0.32, y: 0.4}
   boostScaleDuration: 0.2
+  invincibleBlinkDuration: 0.2
+  invincibleBlinkLoops: 14
   firingShake:
     duration: 0.1
     strength: 0.01

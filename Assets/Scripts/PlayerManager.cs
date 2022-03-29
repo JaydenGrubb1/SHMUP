@@ -54,6 +54,8 @@ namespace SHMUP
 					pu.boostBar.color = pu.boostBar.color.SetRGB(localColor);
 					pu.boostFlash.color = pu.boostFlash.color.SetRGB(localColor);
 
+					pc.playerUI = pu;
+
 					RectTransform rect = uiSections[localIndex].GetComponent<RectTransform>();
 					float width = 1f / players.Count;
 					rect.anchorMin = new Vector2(localIndex * width, 0);

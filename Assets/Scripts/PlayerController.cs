@@ -56,6 +56,10 @@ namespace SHMUP
 		private Vector2 boostScaleLimits = new Vector2(0.32f, 0.4f);
 		[SerializeField]
 		private float boostScaleDuration = 0.2f;
+		[SerializeField]
+		private float invincibleBlinkDuration = 0.2f;
+		[SerializeField]
+		private int invincibleBlinkLoops = 20;
 
 		[Header("Camera Shake")]
 		[SerializeField]
@@ -69,6 +73,9 @@ namespace SHMUP
 		public SpriteRenderer mainSprite;
 		public SpriteRenderer recticleSprite;
 		public ParticleSystem trailSystem;
+
+		[HideInInspector]
+		public PlayerUI playerUI;
 
 		// Input variables
 		private Vector3 moveInput = Vector3.zero;
@@ -84,11 +91,15 @@ namespace SHMUP
 		private bool isBoosting = false;
 		private bool wasBoosting = false;
 
+		// State variables
+		private bool invincible;
+
 		// Properties
 		public float BoostRemaining { get; private set; }
 		public float BoostDuration { get { return boostDuration; } }
 		public bool BoostDrained { get; private set; } = false;
 		public string BulletVariant { get; set; }
+		public int LivesRemaining { get; private set; } = 4;
 
 
 		public AudioSource audioSource;
@@ -113,33 +124,26 @@ namespace SHMUP
 
 		public void OnBoost(InputAction.CallbackContext context)
 		{
-			//speedMulti = context.action.triggered ? speedBoost : 1;
-			//context.action.
 			boosting = context.action.triggered;
 		}
 		#endregion
 
 		public void Start()
 		{
-			//Cursor.lockState = CursorLockMode.Confined;
-			//Cursor.visible = false;
-			//screenLower = Camera.main.ScreenToWorldPoint(Vector2.zero).SetZ(0);
-			//screenUpper = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height)).SetZ(0);
-
 			BoostRemaining = boostDuration;
 		}
 
 		public void Update()
 		{
 			// Calculate boost status
-			BoostRemaining += Time.deltaTime * (boosting && !BoostDrained ? -1 : boostRecharge);
+			BoostRemaining += Time.deltaTime * (boosting && !BoostDrained && !invincible ? -1 : boostRecharge);
 			BoostRemaining = Mathf.Clamp(BoostRemaining, 0, boostDuration);
 
 			if (BoostRemaining == 0)
 				BoostDrained = true;
 			if (BoostRemaining == boostDuration)
 				BoostDrained = false;
-			isBoosting = !BoostDrained && BoostRemaining > 0 && boosting;
+			isBoosting = !BoostDrained && BoostRemaining > 0 && boosting && !invincible;
 
 			// Vibrate controller
 			// NEEDS FIXING, VIBRATE CORRECT CONTROLLER
@@ -160,6 +164,8 @@ namespace SHMUP
 			prevMove = velocity;
 			Vector3 absVelocity = velocity * Time.deltaTime * movementSpeed;
 			sprite.position += absVelocity;
+
+			playerUI.CustomUpdate();
 
 			// Update trail emmision rate
 			// based on current velocity
@@ -194,7 +200,7 @@ namespace SHMUP
 			sprite.rotation = Quaternion.Lerp(sprite.rotation, quat, Time.deltaTime * rotationSmoothing);
 
 			// Fire bullets
-			if (firing && !wasFiring)
+			if (firing && !wasFiring && !invincible)
 			{
 				GameObject bullet = ObjectPool.Get(BulletVariant);
 				bullet.SetActive(true);
@@ -216,7 +222,16 @@ namespace SHMUP
 
 		public void OnTriggerEnter2D(Collider2D collision)
 		{
-
+			if (collision.tag == "Enemy")
+			{
+				if (!invincible)
+				{
+					invincible = true;
+					LivesRemaining--;
+					ShakeCamera(damageShake);
+					mainSprite.DOColor(Color.white, invincibleBlinkDuration).SetLoops(invincibleBlinkLoops, LoopType.Yoyo).OnComplete(() => invincible = false);
+				}
+			}
 		}
 
 		private void ResetFireState()
