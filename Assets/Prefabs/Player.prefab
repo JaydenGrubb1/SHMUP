@@ -40,7 +40,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6715989252706893795}
   - component: {fileID: 7592918620979375816}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Recticle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
