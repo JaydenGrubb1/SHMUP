@@ -283,9 +283,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   poolItems:
-  - id: player-bullet
-    prefab: {fileID: 4072708244073218036, guid: 0e809dcc0666bd84f806165ac1fa85a3, type: 3}
-    maxSize: 200
+  - id: red-bullet
+    prefab: {fileID: 5167160401337616517, guid: b5eb016c91cbed0498365bf1abaf9a83, type: 3}
+    maxSize: 50
+  - id: green-bullet
+    prefab: {fileID: 8512722928742870380, guid: a2709da5f1bdb1c43b5386ead4e10603, type: 3}
+    maxSize: 50
+  - id: blue-bullet
+    prefab: {fileID: 8796488850670142567, guid: 32fe882c05e32cb4491f6058248be3be, type: 3}
+    maxSize: 50
+  - id: yellow-bullet
+    prefab: {fileID: 3731628134741122545, guid: c28381e7173e43345ac4307a83fa92fc, type: 3}
+    maxSize: 50
+  - id: enemy-bullet
+    prefab: {fileID: 4773302931884140845, guid: 8eebefa3c1099c94f9c4ed0233329666, type: 3}
+    maxSize: 400
 --- !u!224 &461742147 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1172416938951003626, guid: ed5f79f2b50a61f4c9a03870dbe4c3a6, type: 3}
@@ -850,6 +862,11 @@ MonoBehaviour:
   - {r: 0.3443396, g: 1, b: 0.3443396, a: 1}
   - {r: 0, g: 0.48034477, b: 1, a: 1}
   - {r: 0.972549, g: 0.9098039, b: 0.1764706, a: 1}
+  bulletVariants:
+  - red-bullet
+  - green-bullet
+  - blue-bullet
+  - yellow-bullet
 --- !u!1 &758529327
 GameObject:
   m_ObjectHideFlags: 0

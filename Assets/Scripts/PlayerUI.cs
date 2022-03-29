@@ -8,10 +8,9 @@ namespace SHMUP
 {
     public class PlayerUI : MonoBehaviour
     {
-        [SerializeField]
-        private Image boostBar;
-        [SerializeField]
-        private Image boostFlash;
+        public Image boostBackground;
+        public Image boostBar;
+        public Image boostFlash;
 
         [HideInInspector]
         public PlayerController player;

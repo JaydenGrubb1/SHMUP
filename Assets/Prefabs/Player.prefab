@@ -5268,6 +5268,27 @@ MonoBehaviour:
   fireScaleDuration: 0.06
   boostScaleLimits: {x: 0.32, y: 0.4}
   boostScaleDuration: 0.2
+  firingShake:
+    duration: 0.1
+    strength: 0.01
+    vibrato: 5
+    randomness: 90
+    snapping: 0
+    fadeOut: 1
+  damageShake:
+    duration: 0.1
+    strength: 0.05
+    vibrato: 10
+    randomness: 90
+    snapping: 0
+    fadeOut: 1
+  deathShake:
+    duration: 0
+    strength: 0
+    vibrato: 0
+    randomness: 0
+    snapping: 0
+    fadeOut: 0
   mainSprite: {fileID: 5607052800074907836}
   recticleSprite: {fileID: 7592918620979375816}
   trailSystem: {fileID: 1950701095602523022}

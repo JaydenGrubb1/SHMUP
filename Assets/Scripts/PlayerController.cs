@@ -88,6 +88,7 @@ namespace SHMUP
 		public float BoostRemaining { get; private set; }
 		public float BoostDuration { get { return boostDuration; } }
 		public bool BoostDrained { get; private set; } = false;
+		public string BulletVariant { get; set; }
 
 
 		public AudioSource audioSource;
@@ -195,7 +196,7 @@ namespace SHMUP
 			// Fire bullets
 			if (firing && !wasFiring)
 			{
-				GameObject bullet = ObjectPool.Get("player-bullet");
+				GameObject bullet = ObjectPool.Get(BulletVariant);
 				bullet.SetActive(true);
 				bullet.transform.position = bulletSpawn.position;
 				bullet.GetComponent<Rigidbody2D>().AddForce(diff.normalized * 1000);
@@ -203,7 +204,7 @@ namespace SHMUP
 				audioSource.PlayOneShot(audioClip);
 				Invoke("ResetFireState", 1f / bulletsPerSecond);
 
-
+				ShakeCamera(firingShake);
 
 				// Animate recoil
 				sprite.DOScaleX(fireScaleLimits.x, fireScaleDuration).OnComplete(() =>

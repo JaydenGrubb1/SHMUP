@@ -368,6 +368,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bb9d8c555e92f541ac1c5580526500e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  boostBackground: {fileID: 94528910}
   boostBar: {fileID: 1485153684}
   boostFlash: {fileID: 1027248902}
   player: {fileID: 0}

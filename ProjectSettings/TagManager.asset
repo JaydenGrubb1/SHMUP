@@ -6,6 +6,7 @@ TagManager:
   tags:
   - PreviewOnly
   - LevelMusic
+  - Enemy
   layers:
   - Default
   - TransparentFX
