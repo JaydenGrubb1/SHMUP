@@ -5046,7 +5046,7 @@ PolygonCollider2D:
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
+    pivot: {x: 0.375, y: 0.5}
     oldSize: {x: 1, y: 1}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
@@ -5285,15 +5285,21 @@ MonoBehaviour:
     snapping: 0
     fadeOut: 1
   deathShake:
-    duration: 0
-    strength: 0
-    vibrato: 0
-    randomness: 0
+    duration: 0.7
+    strength: 0.3
+    vibrato: 13
+    randomness: 90
     snapping: 0
-    fadeOut: 0
+    fadeOut: 1
+  boostRumble: {x: 0, y: 0.1}
+  hitRumble: {x: 0.42, y: 0.2}
+  hitRumbleTime: 0.25
+  deathRumble: {x: 0.9, y: 0.4}
+  deathRumbleTime: 0.7
   mainSprite: {fileID: 5607052800074907836}
   recticleSprite: {fileID: 7592918620979375816}
   trailSystem: {fileID: 1950701095602523022}
+  playerUI: {fileID: 0}
   audioSource: {fileID: 6341631502009595581}
   audioClip: {fileID: 8300000, guid: 45f5027fb52a5d9438bf13346c0cb2e3, type: 3}
 --- !u!82 &6341631502009595581

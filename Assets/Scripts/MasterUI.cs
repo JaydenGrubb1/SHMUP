@@ -16,9 +16,9 @@ namespace SHMUP
 
 		public void Update()
 		{
-			progressBar.fillAmount = LevelManager.MusicProgress/LevelManager.MusicLength;
-			progressTime.text = FormatTime(LevelManager.MusicProgress);
-			totalTime.text = FormatTime(LevelManager.MusicLength);
+			progressBar.fillAmount = LevelManager.CurrentProgress/LevelManager.TotalDuration;
+			progressTime.text = FormatTime(LevelManager.CurrentProgress);
+			totalTime.text = FormatTime(LevelManager.TotalDuration);
 		}
 
 		private string FormatTime(float time)

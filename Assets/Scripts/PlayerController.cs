@@ -69,6 +69,18 @@ namespace SHMUP
 		[SerializeField]
 		private CameraShakeParams deathShake;
 
+		[Header("Rumble")]
+		[SerializeField]
+		private Vector2 boostRumble;
+		[SerializeField]
+		private Vector2 hitRumble;
+		[SerializeField]
+		private float hitRumbleTime = 0.2f;
+		[SerializeField]
+		private Vector2 deathRumble;
+		[SerializeField]
+		private float deathRumbleTime;
+
 		[Header("Component References")]
 		public SpriteRenderer mainSprite;
 		public SpriteRenderer recticleSprite;
@@ -135,6 +147,9 @@ namespace SHMUP
 
 		public void Update()
 		{
+			if (LivesRemaining < 1)
+				moveInput = Vector3.zero;
+
 			// Calculate boost status
 			BoostRemaining += Time.deltaTime * (boosting && !BoostDrained && !invincible ? -1 : boostRecharge);
 			BoostRemaining = Mathf.Clamp(BoostRemaining, 0, boostDuration);
@@ -148,9 +163,9 @@ namespace SHMUP
 			// Vibrate controller
 			// NEEDS FIXING, VIBRATE CORRECT CONTROLLER
 			if (isBoosting)
-				Gamepad.current.SetMotorSpeeds(0.25f, 0.75f);
-			else
-				Gamepad.current.SetMotorSpeeds(0, 0);
+				Gamepad.current.SetMotorSpeeds(boostRumble.x, boostRumble.y);
+			else if (!invincible)
+				ResetRumble();
 
 			// Scale player when boost start
 			if (isBoosting && !wasBoosting)
@@ -200,7 +215,7 @@ namespace SHMUP
 			sprite.rotation = Quaternion.Lerp(sprite.rotation, quat, Time.deltaTime * rotationSmoothing);
 
 			// Fire bullets
-			if (firing && !wasFiring && !invincible)
+			if (firing && !wasFiring)
 			{
 				GameObject bullet = ObjectPool.Get(BulletVariant);
 				bullet.SetActive(true);
@@ -228,10 +243,27 @@ namespace SHMUP
 				{
 					invincible = true;
 					LivesRemaining--;
-					ShakeCamera(damageShake);
-					mainSprite.DOColor(Color.white, invincibleBlinkDuration).SetLoops(invincibleBlinkLoops, LoopType.Yoyo).OnComplete(() => invincible = false);
+					if (LivesRemaining > 0)
+					{
+						ShakeCamera(damageShake);
+						Gamepad.current.SetMotorSpeeds(hitRumble.x, hitRumble.y);
+						Invoke("ResetRumble", hitRumbleTime);
+						mainSprite.DOColor(Color.white, invincibleBlinkDuration).SetLoops(invincibleBlinkLoops, LoopType.Yoyo).OnComplete(() => invincible = false);
+					}
+					else
+					{
+						ShakeCamera(deathShake);
+						Gamepad.current.SetMotorSpeeds(deathRumble.x, deathRumble.y);
+						Invoke("ResetRumble", deathRumbleTime);
+						mainSprite.DOColor(Color.white, invincibleBlinkDuration);
+					}
 				}
 			}
+		}
+
+		private void ResetRumble()
+		{
+			Gamepad.current.SetMotorSpeeds(0, 0);
 		}
 
 		private void ResetFireState()

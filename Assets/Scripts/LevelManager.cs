@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 
 namespace SHMUP
 {
-	public class LevelManager : MonoBehaviour
+    public class LevelManager : MonoBehaviour
     {
         private static LevelManager instance;
 
@@ -14,10 +15,10 @@ namespace SHMUP
         [SerializeField]
         private float loadDelay = 3;
 
-        private AudioSource levelTrack;
+        private PlayableDirector director;
 
-        public static float MusicProgress { get { return instance.levelTrack ? instance.levelTrack.time : 0; } }
-        public static float MusicLength { get { return instance.levelTrack ? instance.levelTrack.clip.length : 0; } }
+        public static float CurrentProgress { get { return instance.director ? (float)instance.director.time : 0; } }
+        public static float TotalDuration { get { return instance.director ? (float)instance.director.playableAsset.duration : 0; } }
 
         public void Awake()
         {
@@ -31,8 +32,8 @@ namespace SHMUP
             }
         }
 
-		public void Start()
-		{
+        public void Start()
+        {
             Invoke("Test", loadDelay);
         }
 
@@ -43,17 +44,17 @@ namespace SHMUP
 
         public static void LoadLevel(int number)
         {
-			SceneManager.LoadSceneAsync(number, LoadSceneMode.Additive).completed += LoadComplete;
+            SceneManager.LoadSceneAsync(number, LoadSceneMode.Additive).completed += LoadComplete;
         }
 
-		private static void LoadComplete(AsyncOperation obj)
-		{
-            foreach(GameObject go in GameObject.FindGameObjectsWithTag("PreviewOnly"))
-			{
+        private static void LoadComplete(AsyncOperation obj)
+        {
+            foreach (GameObject go in GameObject.FindGameObjectsWithTag("PreviewOnly"))
+            {
                 go.SetActive(false);
-			}
+            }
 
-            instance.levelTrack = GameObject.FindGameObjectWithTag("LevelMusic").GetComponent<AudioSource>();
-		}
-	}
+            instance.director = GameObject.FindGameObjectWithTag("LevelMusic").GetComponent<PlayableDirector>();
+        }
+    }
 }
