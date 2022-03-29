@@ -13,6 +13,8 @@ namespace SHMUP
 		private GameObject uiSectionPrefab;
 		[SerializeField]
 		private Transform uiParent;
+		[SerializeField]
+		private Color[] colors;
 
 		private List<PlayerInput> players = new List<PlayerInput>();
 		private List<GameObject> uiSections = new List<GameObject>();
@@ -31,6 +33,11 @@ namespace SHMUP
 					int localIndex = i / 2;
 					Vector3 pos = new Vector3(size.x * (i / (float)(players.Count * 2)), size.y / 2, 0);
 					players[localIndex].transform.position = pos + GameManager.screenLower;
+
+					foreach (SpriteRenderer rend in players[localIndex].GetComponentsInChildren<SpriteRenderer>())
+					{
+						rend.color = colors[localIndex % colors.Length];
+					}					
 
 					RectTransform rect = uiSections[localIndex].GetComponent<RectTransform>();
 					float width = 1f / players.Count;
