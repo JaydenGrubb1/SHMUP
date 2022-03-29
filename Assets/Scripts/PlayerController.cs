@@ -34,6 +34,15 @@ namespace SHMUP
 		private float movementSmoothing = 2.5f;
 		[SerializeField]
 		private float targetSmoothing = 2.5f;
+		[SerializeField]
+		private Vector2 trailEmmisionLimits = new Vector2(0.3f, 30);
+		[SerializeField]
+		private float maxRelativeSpeed = 0.2f;
+
+		[Header("Component References")]
+		public SpriteRenderer mainSprite;
+		public SpriteRenderer recticleSprite;
+		public ParticleSystem trailSystem;
 
 		// Input variables
 		private Vector3 moveInput = Vector3.zero;
@@ -44,8 +53,10 @@ namespace SHMUP
 		// Calculation variables
 		private Vector3 prevMove = Vector3.zero;
 		private Vector3 prevTarget = Vector3.zero;
+		private Vector3 prevVelocity = Vector3.zero;
 		private Vector3 screenLower;
 		private Vector3 screenUpper;
+		private bool wasFiring = false;
 		#endregion
 
 		#region Input Callbacks
@@ -78,16 +89,18 @@ namespace SHMUP
 			screenUpper = Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height)).SetZ(0);
 		}
 
-		bool wasFiring = false;
-
 		public void Update()
 		{
 			// Update player position
 			Vector3 velocity = Vector3.Lerp(prevMove, moveInput * speedMulti, Time.deltaTime * movementSmoothing);
 			prevMove = velocity;
-			sprite.position += velocity * Time.deltaTime * movementSpeed;
+			Vector3 absVelocity = velocity * Time.deltaTime * movementSpeed;
+			sprite.position += absVelocity;
 
-			//transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0, 0, 5) * Time.deltaTime * 10);
+			// Update trail emmision rate
+			// based on current velocity
+			ParticleSystem.EmissionModule emm = trailSystem.emission;
+			emm.rateOverTime = Mathf.Lerp(trailEmmisionLimits.x, trailEmmisionLimits.y, Mathf.InverseLerp(0, maxRelativeSpeed, absVelocity.magnitude));
 
 			// Update recticle position
 			if (input.currentControlScheme == "Controller")

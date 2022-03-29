@@ -36,14 +36,22 @@ namespace SHMUP
 					Vector3 pos = new Vector3(size.x * (i / (float)(players.Count * 2)), size.y / 2, 0);
 					players[localIndex].transform.position = pos + GameManager.screenLower;
 
-					foreach (SpriteRenderer rend in players[localIndex].GetComponentsInChildren<SpriteRenderer>())
-					{
-						rend.color = colors[localIndex % colors.Length];
-					}
+					PlayerController pc = players[localIndex].GetComponent<PlayerController>();
+					Color localColor = colors[localIndex % colors.Length];
+
+					pc.mainSprite.color = localColor;
+					pc.recticleSprite.color = localColor;
+					ParticleSystem.MainModule main = pc.trailSystem.main;
+					main.startColor = localColor;
+
+					//foreach (SpriteRenderer rend in players[localIndex].GetComponentsInChildren<SpriteRenderer>())
+					//{
+					//	rend.color = colors[localIndex % colors.Length];
+					//}
 					
 					foreach(Image img in uiSections[localIndex].GetComponentsInChildren<Image>())
 					{
-						img.color = img.color.SetRGB(colors[localIndex % colors.Length]);
+						img.color = img.color.SetRGB(localColor);
 					}
 
 					RectTransform rect = uiSections[localIndex].GetComponent<RectTransform>();
