@@ -8,8 +8,8 @@ using System;
 
 namespace SHMUP
 {
-    public class PlayerController : MonoBehaviour
-    {
+	public class PlayerController : MonoBehaviour
+	{
 		#region Variables
 		[Header("Components")]
 		[SerializeField]
@@ -22,6 +22,10 @@ namespace SHMUP
 		private Transform bulletSpawn;
 
 		[Header("Control Variables")]
+		[SerializeField]
+		private bool useAbsJoystickAngle = true;
+		[SerializeField]
+		private float virtualRecticleDist = 3.2f;
 		[SerializeField]
 		private float bulletsPerSecond = 8f;
 		[SerializeField]
@@ -60,8 +64,6 @@ namespace SHMUP
 		private float invincibleBlinkDuration = 0.2f;
 		[SerializeField]
 		private int invincibleBlinkLoops = 20;
-		[SerializeField]
-		private float deathTimeStop = 5;
 
 		[Header("Camera Shake")]
 		[SerializeField]
@@ -148,10 +150,18 @@ namespace SHMUP
 			BoostRemaining = boostDuration;
 		}
 
+		Vector3 moveME;
+
 		public void Update()
 		{
+			// Reset all inputs when player dies
 			if (LivesRemaining < 1)
+			{
 				moveInput = Vector3.zero;
+				targetInput = Vector3.zero;
+				firing = false;
+				boosting = false;
+			}
 
 			// Calculate boost status
 			BoostRemaining += Time.deltaTime * (boosting && !BoostDrained && !invincible ? -1 : boostRecharge);
@@ -195,20 +205,30 @@ namespace SHMUP
 			// Update recticle position
 			if (input.currentControlScheme == "Controller")
 			{
-				targetInput = targetInput.Clamp(GameManager.ScreenLower - recticle.position, GameManager.ScreenUpper - recticle.position);
+				if (useAbsJoystickAngle)
+				{
+					recticleSprite.enabled = false;
+					if (targetInput.sqrMagnitude > 0)
+						moveME = targetInput.normalized * virtualRecticleDist;
 
-				Vector3 targetVel = Vector3.Lerp(prevTarget, targetInput, Time.deltaTime * targetSmoothing);
-				prevTarget = targetVel;
-				Vector3 newPos = recticle.position;
-				newPos += (targetVel * Time.deltaTime * targetSpeed);
-				recticle.position = newPos.Clamp(GameManager.ScreenLower, GameManager.ScreenUpper);
+					recticle.position = Vector3.Lerp(recticle.position, sprite.position + moveME, Time.deltaTime * targetSmoothing);
+				}
+				else
+				{
+					targetInput = targetInput.Clamp(GameManager.ScreenLower - recticle.position, GameManager.ScreenUpper - recticle.position);
+
+					Vector3 targetVel = Vector3.Lerp(prevTarget, targetInput, Time.deltaTime * targetSmoothing);
+					prevTarget = targetVel;
+					Vector3 newPos = recticle.position;
+					newPos += (targetVel * Time.deltaTime * targetSpeed);
+					recticle.position = newPos.Clamp(GameManager.ScreenLower, GameManager.ScreenUpper);
+				}
 			}
 			else
 			{
 				Vector2 mousePos = Mouse.current.position.ReadValue();
-				Vector3 targetPos = GameManager.MainCamera.ScreenToWorldPoint(mousePos);
-				targetPos.z = 0;
-				recticle.position = Vector3.Lerp(recticle.position, targetPos, Time.deltaTime * targetSmoothing);
+				Vector3 worldMousePos = GameManager.MainCamera.ScreenToWorldPoint(mousePos).SetZ(0);
+				recticle.position = Vector3.Lerp(recticle.position, worldMousePos, Time.deltaTime * targetSmoothing);
 			}
 
 			// Update player rotation
